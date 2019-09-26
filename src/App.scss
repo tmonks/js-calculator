@@ -1,0 +1,73 @@
+$colorAppBg: #68829e;
+$colorDisplayBg: #505160;
+$colorCalcBg: black;
+$colorButtonBg: #ccc;
+$colorDisplayText: white;
+$colorEqualsBg: #888;
+$colorClearBg: orange;
+
+body {
+  font-family: "Arial", sans-serif;
+  font-size: 1.5em;
+  background-color: $colorAppBg;
+  margin: 0;
+  padding-top: 10px;
+}
+
+.calculator {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr repeat(5, 1fr);
+  max-width: 400px;
+  grid-gap: 5px;
+  max-height: 500px;
+  height: 100vh;
+  background-color: $colorCalcBg;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+#display {
+  grid-column-start: span 4;
+  background-color: $colorDisplayBg;
+  text-align: right;
+  color: $colorDisplayText;
+  font-family: monospace;
+  font-size: 2em;
+  margin: 5px;
+  padding: 5px;
+}
+
+/* Make 'AC' and '0' buttons 2 columns wide */
+#clear,
+#zero {
+  grid-column-start: span 2;
+}
+
+#clear {
+  background-color: $colorClearBg;
+}
+
+/* Make '+' button to rows high */
+#equals {
+  grid-row-start: span 2;
+  background-color: $colorEqualsBg;
+}
+
+.button {
+  background-color: $colorButtonBg;
+  padding: 0.2em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: white;
+  cursor: default;
+}
