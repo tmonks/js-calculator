@@ -57,23 +57,23 @@ function App() {
       return parseFloat(stmt[0]);
     }
 
-    const num = parseFloat(stmt.shift());
-    const op = stmt.shift();
+    const num = parseFloat(stmt.pop());
+    const op = stmt.pop();
 
     switch (op) {
       case "+":
         // console.log(`${num} + solve(${stmt})`);
-        return num + solve(stmt);
+        return solve(stmt) + num;
       case "-":
         // console.log(`${num} - solve(${stmt})`);
-        return num - solve(stmt);
+        return solve(stmt) - num;
       case "x":
-        stmt[0] = num * parseFloat(stmt[0]);
+        stmt[stmt.length - 1] = parseFloat(stmt[stmt.length - 1]) * num;
         return solve(stmt);
         // console.log(`solve(${stmt})`);
         break;
       case "/":
-        stmt[0] = num / parseFloat(stmt[0]);
+        stmt[stmt.length - 1] = parseFloat(stmt[stmt.length - 1]) / num;
         return solve(stmt);
       // console.log(`solve(${stmt})`);
     }
