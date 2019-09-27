@@ -4,15 +4,78 @@ import Button from "./Button";
 import ReactFCCTest from "react-fcctest";
 
 function App() {
-  const [display, setDisplay] = useState("0");
+  const [statement, setStatement] = useState([]);
+  const [input, setInput] = useState(0);
+
+  const inputtingNumber = () => {
+    const isNumber = /^[0-9.]*$/.test(input);
+    return isNumber;
+  };
 
   const handleClick = text => {
     switch (text) {
+      case "=":
+        setStatement([]);
+        setInput(solve([...statement, input]));
+        break;
       case "AC":
-        setDisplay("0");
+        setStatement([]);
+        setInput("0");
+        break;
+      case ".":
+        if (!inputtingNumber()) {
+          setStatement([...statement, input]);
+          setInput("0.");
+        } else if (!/\./.test(input)) {
+          setInput(input + ".");
+        }
+        break;
+      case "+":
+      case "-":
+      case "x":
+      case "/":
+        if (inputtingNumber()) {
+          setStatement([...statement, input]);
+        }
+        setInput(text);
         break;
       default:
-        setDisplay(display + text);
+        // inputting a number
+        if (input === "0") {
+          setInput(text);
+        } else if (!inputtingNumber()) {
+          setStatement([...statement, input]);
+          setInput(text);
+        } else {
+          setInput(input + text);
+        }
+    }
+  };
+
+  const solve = stmt => {
+    if (stmt.length == 1) {
+      return parseFloat(stmt[0]);
+    }
+
+    const num = parseFloat(stmt.shift());
+    const op = stmt.shift();
+
+    switch (op) {
+      case "+":
+        // console.log(`${num} + solve(${stmt})`);
+        return num + solve(stmt);
+      case "-":
+        // console.log(`${num} - solve(${stmt})`);
+        return num - solve(stmt);
+      case "x":
+        stmt[0] = num * parseFloat(stmt[0]);
+        return solve(stmt);
+        // console.log(`solve(${stmt})`);
+        break;
+      case "/":
+        stmt[0] = num / parseFloat(stmt[0]);
+        return solve(stmt);
+      // console.log(`solve(${stmt})`);
     }
   };
 
@@ -20,7 +83,7 @@ function App() {
     <div className="app-container">
       <ReactFCCTest />
       <div className="calculator">
-        <div id="display">{display}</div>
+        <div id="display">{statement.join(" ") + " " + input}</div>
         <Button id="clear" text="AC" clickHandler={handleClick} />
         <Button id="divide" text="/" clickHandler={handleClick} />
         <Button id="multiply" text="x" clickHandler={handleClick} />
