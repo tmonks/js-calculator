@@ -15,6 +15,7 @@ $colorEqualsBg: #222831;
 $colorClearBg: #222831;
 $colorButtonText: white;
 $colorOperatorBg: #222831;
+$colorOperatorText: #00adb5;
 
 body {
   font-family: "Arial", sans-serif;
@@ -74,18 +75,19 @@ body {
   grid-column-start: span 2;
 }
 
+#equals,
 #clear,
 #multiply,
 #divide,
 #subtract,
 #add {
   background-color: $colorClearBg;
+  color: $colorOperatorText;
 }
 
 /* Make '+' button to rows high */
 #equals {
   grid-row-start: span 2;
-  background-color: $colorEqualsBg;
 }
 
 .button {
@@ -96,8 +98,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  font-size: 1.3em;
   // border-radius: 5px;
-  font-weight: bold;
 }
 
 .button:hover {
