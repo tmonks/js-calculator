@@ -1,10 +1,21 @@
+// $colorAppBg: #68829e;
+// $colorDisplayBg: #505160;
+// $colorCalcBg: black;
+// $colorButtonBg: #ccc;
+// $colorDisplayText: white;
+// $colorEqualsBg: #888;
+// $colorClearBg: orange;
+
 $colorAppBg: #68829e;
-$colorDisplayBg: #505160;
+$colorDisplayBg: black;
 $colorCalcBg: black;
-$colorButtonBg: #ccc;
-$colorDisplayText: white;
-$colorEqualsBg: #888;
-$colorClearBg: orange;
+$colorButtonBg: #393e46;
+$colorDisplayText: #00adb5;
+$colorEqualsBg: #222831;
+$colorClearBg: #222831;
+$colorButtonText: white;
+$colorOperatorBg: #222831;
+$colorOperatorText: #00adb5;
 
 body {
   font-family: "Arial", sans-serif;
@@ -18,26 +29,44 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: 2fr repeat(5, 1fr);
   max-width: 400px;
-  grid-gap: 5px;
+  grid-gap: 1px;
   max-height: 500px;
   height: 100vh;
   background-color: $colorCalcBg;
-  padding: 10px;
+  padding: 8px;
   box-sizing: border-box;
   border-radius: 10px;
 }
 
-#display {
+#display-container {
   grid-column-start: span 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: $colorDisplayBg;
   text-align: right;
   color: $colorDisplayText;
-  font-family: monospace;
-  font-size: 1.3em;
-  margin: 5px;
+  margin-bottom: 5px;
   padding: 5px;
+}
+
+#display-container > div {
+  height: 30px;
+}
+
+#history,
+#live-calc {
+  font-size: 0.8em;
+}
+
+#display {
+  font-size: 1.5em;
+}
+
+#history {
+  overflow: hidden;
 }
 
 /* Make 'AC' and '0' buttons 2 columns wide */
@@ -46,28 +75,34 @@ body {
   grid-column-start: span 2;
 }
 
-#clear {
+#equals,
+#clear,
+#multiply,
+#divide,
+#subtract,
+#add {
   background-color: $colorClearBg;
+  color: $colorOperatorText;
 }
 
 /* Make '+' button to rows high */
 #equals {
   grid-row-start: span 2;
-  background-color: $colorEqualsBg;
 }
 
 .button {
+  color: $colorButtonText;
   background-color: $colorButtonBg;
   padding: 0.2em;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 5px;
-  font-weight: bold;
+  font-size: 1.3em;
+  // border-radius: 5px;
 }
 
 .button:hover {
-  background-color: white;
+  background-color: #5b6068 !important;
   cursor: default;
 }
