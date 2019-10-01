@@ -20,7 +20,7 @@ function App() {
     }
 
     if (input === "=") {
-      const solution = solve([...expression, currentTerm]);
+      const solution = solve([...expression, currentTerm]).toString();
       setHistory([expression.join(" ") + " " + currentTerm + " = " + solution]);
       setCurrentTerm(solution);
       setExpression([]);
