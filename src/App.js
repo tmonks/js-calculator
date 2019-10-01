@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.scss";
 import Button from "./Button";
 import ReactFCCTest from "react-fcctest";
-import { statement } from "@babel/template";
+// import { statement } from "@babel/template";
 
 function App() {
   const [expression, setExpression] = useState([]);
@@ -35,10 +35,14 @@ function App() {
 
     if (numberMode) {
       // NUMBER MODE
-      if (/[+\-x/]/.test(input)) {
+      if (/[+\-×÷]/.test(input)) {
         // switching from number to operator mode
-        // TODO: remove any trailing decimal
-        setExpression([...expression, currentTerm]);
+        // remove any trailing decimal
+        let cleanedTerm = currentTerm;
+        if (currentTerm.charAt(currentTerm.length - 1) === ".") {
+          cleanedTerm = currentTerm.slice(0, currentTerm.length - 1);
+        }
+        setExpression([...expression, cleanedTerm]);
         setCurrentTerm(input);
         setNumberMode(false);
       } else if (/[0-9]/.test(input)) {
@@ -55,7 +59,7 @@ function App() {
       }
     } else {
       // OPERATOR MODE
-      if (/[+\-x/]/.test(input)) {
+      if (/[+\-×÷]/.test(input)) {
         // operator input, append it to currentTerm
         setCurrentTerm(currentTerm + input);
       } else {
@@ -154,10 +158,10 @@ function App() {
         return solve(stmt) + num;
       case "-":
         return solve(stmt) - num;
-      case "x":
+      case "×":
         stmt[stmt.length - 1] = parseFloat(stmt[stmt.length - 1]) * num;
         return solve(stmt);
-      case "/":
+      case "÷":
         stmt[stmt.length - 1] = parseFloat(stmt[stmt.length - 1]) / num;
         return solve(stmt);
       default:
@@ -181,8 +185,8 @@ function App() {
           </div>
         </div>
         <Button id="clear" text="AC" clickHandler={handleClick} />
-        <Button id="divide" text="/" clickHandler={handleClick} />
-        <Button id="multiply" text="x" clickHandler={handleClick} />
+        <Button id="divide" text="÷" clickHandler={handleClick} />
+        <Button id="multiply" text="×" clickHandler={handleClick} />
         <Button id="seven" text="7" clickHandler={handleClick} />
         <Button id="eight" text="8" clickHandler={handleClick} />
         <Button id="nine" text="9" clickHandler={handleClick} />
