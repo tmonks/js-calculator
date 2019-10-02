@@ -8,9 +8,9 @@
 
 $colorAppBg: #68829e;
 $colorDisplayBg: black;
+$colorDisplayText: #00adb5;
 $colorCalcBg: black;
 $colorButtonBg: #393e46;
-$colorDisplayText: #00adb5;
 $colorEqualsBg: #222831;
 $colorClearBg: #222831;
 $colorButtonText: white;
@@ -29,15 +29,19 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 2fr repeat(5, 1fr);
-  max-width: 400px;
+  grid-template-rows: auto repeat(5, minmax(1.3em, 70px));
+  max-width: 350px;
   grid-gap: 1px;
   max-height: 500px;
-  height: 100vh;
+  // max-height: 600px;
+  height: calc(100vh - 10px);
+  // max-height: 1000px;
+  // height: 100vh;
   background-color: $colorCalcBg;
   padding: 8px;
   box-sizing: border-box;
   border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
 }
 
 #display-container {
@@ -53,16 +57,24 @@ body {
 }
 
 #display-container > div {
-  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px;
+  overflow-wrap: break-word;
 }
 
 #history,
 #live-calc {
   font-size: 0.8em;
+  min-height: 1.2em;
+  overflow: auto;
 }
 
 #display {
   font-size: 1.5em;
+  min-height: 1.5em;
+  overflow: hidden;
 }
 
 #history {
