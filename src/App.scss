@@ -92,15 +92,16 @@ body {
 #multiply,
 #divide,
 #subtract,
-#add {
+#add,
+#backspace {
   background-color: $colorClearBg;
   color: $colorOperatorText;
 }
 
 /* Make '+' button to rows high */
-#equals {
-  grid-row-start: span 2;
-}
+// #equals {
+//   grid-row-start: span 2;
+// }
 
 .button {
   color: $colorButtonText;
@@ -112,6 +113,11 @@ body {
   justify-content: center;
   font-size: 1.3em;
   // border-radius: 5px;
+}
+
+/* center-align Font Awesome svg */
+.button > svg {
+  margin: 0 auto;
 }
 
 .button:hover {

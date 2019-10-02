@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./App.scss";
 import Button from "./Button";
 import ReactFCCTest from "react-fcctest";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 // import { statement } from "@babel/template";
 
 function App() {
@@ -10,42 +12,29 @@ function App() {
   const [numberMode, setNumberMode] = useState(true);
   const [history, setHistory] = useState([]);
 
-  const handleClick = input => {
-    if (input === "AC") {
-      setExpression([]);
-      setCurrentTerm("0");
-      setHistory([]);
-      setNumberMode(true);
-      return;
-    }
+  const clickClear = () => {
+    setExpression([]);
+    setCurrentTerm("0");
+    setHistory([]);
+    setNumberMode(true);
+  };
 
-    if (input === "=") {
-      const solution = solve([...expression, currentTerm]).toString();
-      setHistory([expression.join(" ") + " " + currentTerm + " = " + solution]);
-      setCurrentTerm(solution);
-      setExpression([]);
-      return;
-    }
-    // equation was just solved and input is entered, we'll replace the current currentTerm
-    // if (numberMode == "solved" && /^-?[0-9.]*$/.test(input)) {
-    //   console.log("Switching from solved to number and blanking currentTerm");
-    //   setCurrentTerm("");
-    //   setNumberMode("number");
-    // }
+  const clickEquals = () => {
+    const solution = solve([...expression, currentTerm]).toString();
+    setHistory([expression.join(" ") + " " + currentTerm + " = " + solution]);
+    setCurrentTerm(solution);
+    setExpression([]);
+  };
 
+  const clickNumber = input => {
     if (numberMode) {
       // NUMBER MODE
-      if (/[+\-×÷]/.test(input)) {
-        // switching from number to operator mode
-        // remove any trailing decimal
-        let cleanedTerm = currentTerm;
-        if (currentTerm.charAt(currentTerm.length - 1) === ".") {
-          cleanedTerm = currentTerm.slice(0, currentTerm.length - 1);
+      if (/\./.test(input)) {
+        if (!/\./.test(currentTerm)) {
+          // decimal input AND currentTerm doesn't already contain a decimal
+          setCurrentTerm(currentTerm + input);
         }
-        setExpression([...expression, cleanedTerm]);
-        setCurrentTerm(input);
-        setNumberMode(false);
-      } else if (/[0-9]/.test(input)) {
+      } else {
         // number input - append it
         if (currentTerm === "0") {
           // replace 0 with the current input
@@ -53,95 +42,47 @@ function App() {
         } else {
           setCurrentTerm(currentTerm + input);
         }
-      } else if (!/\./.test(currentTerm)) {
-        // input decimal AND currentTerm doesn't already contain a decimal
-        setCurrentTerm(currentTerm + input);
       }
     } else {
       // OPERATOR MODE
-      if (/[+\-×÷]/.test(input)) {
-        // operator input, append it to currentTerm
-        setCurrentTerm(currentTerm + input);
-      } else {
-        // number input, switching from operator to number mode
-        const operators = currentTerm.split("");
-        if (currentTerm.length > 1) {
-          if (operators[operators.length - 1] === "-") {
-            // if the last operator is '-', move it to the input as a negative sign
-            input = operators.pop() + input;
-          }
+      // number input, switching from operator to number mode
+      const operators = currentTerm.split("");
+      if (currentTerm.length > 1) {
+        if (operators[operators.length - 1] === "-") {
+          // if the last operator is '-', move it to the input as a negative sign
+          input = operators.pop() + input;
         }
-        // commit the last (non '-') operator to the expression
-        setExpression([...expression, operators[operators.length - 1]]);
-        setNumberMode(true);
-        setCurrentTerm(input);
+      }
+      // commit the last (non '-') operator to the expression
+      setExpression([...expression, operators[operators.length - 1]]);
+      setNumberMode(true);
+      setCurrentTerm(input);
 
-        if (input === ".") {
-          // if a decimal input as the first character, preface it with a '0'
-          setCurrentTerm("0.");
-        } else {
-          setCurrentTerm(input);
-        }
+      if (input === ".") {
+        // if a decimal input as the first character, preface it with a '0'
+        setCurrentTerm("0.");
+      } else {
+        setCurrentTerm(input);
       }
     }
   };
 
-  /*
-  const currentlyInputtingNumber = () => {
-    const isNumber = /^[0-9.]*$/.test(currentTerm);
-    return isNumber;
-  };
-
-  const handleClickOrig = input => {
-    switch (input) {
-      case "=":
-        setExpression([]);
-        setCurrentTerm(solve([...expression, currentTerm]));
-        break;
-      case "AC":
-        setExpression([]);
-        setCurrentTerm("0");
-        break;
-      case ".":
-        if (!currentlyInputtingNumber()) {
-          setExpression([...expression, currentTerm]);
-          setCurrentTerm("0.");
-        } else if (!/\./.test(currentTerm)) {
-          setCurrentTerm(currentTerm + ".");
-        }
-        break;
-      case "-":
-        if (
-          currentlyInputtingNumber() ||
-          currentTerm === "+" ||
-          currentTerm === "*" ||
-          currentTerm === "/"
-        ) {
-          setExpression([...expression, currentTerm]);
-        }
-        setCurrentTerm(input);
-        break;
-      case "+":
-      case "x":
-      case "/":
-        if (currentlyInputtingNumber()) {
-          setExpression([...expression, currentTerm]);
-        }
-        setCurrentTerm(input);
-        break;
-      default:
-        // currentTermting a number
-        if (currentTerm === "0") {
-          setCurrentTerm(input);
-        } else if (!currentlyInputtingNumber()) {
-          setExpression([...expression, currentTerm]);
-          setCurrentTerm(input);
-        } else {
-          setCurrentTerm(currentTerm + input);
-        }
+  const clickOperator = input => {
+    if (numberMode) {
+      // switching from number to operator mode
+      // remove any trailing decimal
+      if (currentTerm.charAt(currentTerm.length - 1) === ".") {
+        setExpression([...expression, currentTerm.slice(0, currentTerm.length - 1)]);
+      } else {
+        setExpression([...expression, currentTerm]);
+      }
+      setCurrentTerm(input);
+      setNumberMode(false);
+    } else {
+      // OPERATOR MODE - append input to currentTerm
+      setCurrentTerm(currentTerm + input);
     }
   };
-  */
 
   const solve = statementToSolve => {
     // base case
@@ -169,6 +110,21 @@ function App() {
     }
   };
 
+  const clickBackspace = () => {
+    if (currentTerm.length === 1) {
+      if (expression.length === 0) {
+        setExpression([]);
+        setCurrentTerm("0");
+      } else {
+        setCurrentTerm(expression[expression.length - 1]);
+        setExpression(expression.slice(0, expression.length - 1));
+        setNumberMode(!numberMode);
+      }
+    } else {
+      setCurrentTerm(currentTerm.slice(0, currentTerm.length - 1));
+    }
+  };
+
   return (
     <div className="app-container">
       <ReactFCCTest />
@@ -184,23 +140,28 @@ function App() {
               : ""}
           </div>
         </div>
-        <Button id="clear" text="AC" clickHandler={handleClick} />
-        <Button id="divide" text="÷" clickHandler={handleClick} />
-        <Button id="multiply" text="×" clickHandler={handleClick} />
-        <Button id="seven" text="7" clickHandler={handleClick} />
-        <Button id="eight" text="8" clickHandler={handleClick} />
-        <Button id="nine" text="9" clickHandler={handleClick} />
-        <Button id="subtract" text="-" clickHandler={handleClick} />
-        <Button id="four" text="4" clickHandler={handleClick} />
-        <Button id="five" text="5" clickHandler={handleClick} />
-        <Button id="six" text="6" clickHandler={handleClick} />
-        <Button id="add" text="+" clickHandler={handleClick} />
-        <Button id="one" text="1" clickHandler={handleClick} />
-        <Button id="two" text="2" clickHandler={handleClick} />
-        <Button id="three" text="3" clickHandler={handleClick} />
-        <Button id="equals" text="=" clickHandler={handleClick} />
-        <Button id="zero" text="0" clickHandler={handleClick} />
-        <Button id="decimal" text="." clickHandler={handleClick} />
+        <Button id="clear" text="AC" clickHandler={clickClear} />
+        <Button id="divide" text="÷" clickHandler={clickOperator} />
+        <Button
+          id="backspace"
+          text={<FontAwesomeIcon icon={faBackspace} />}
+          clickHandler={clickBackspace}
+        />
+        <Button id="seven" text="7" clickHandler={clickNumber} />
+        <Button id="eight" text="8" clickHandler={clickNumber} />
+        <Button id="nine" text="9" clickHandler={clickNumber} />
+        <Button id="multiply" text="×" clickHandler={clickOperator} />
+        <Button id="four" text="4" clickHandler={clickNumber} />
+        <Button id="five" text="5" clickHandler={clickNumber} />
+        <Button id="six" text="6" clickHandler={clickNumber} />
+        <Button id="subtract" text="-" clickHandler={clickOperator} />
+        <Button id="one" text="1" clickHandler={clickNumber} />
+        <Button id="two" text="2" clickHandler={clickNumber} />
+        <Button id="three" text="3" clickHandler={clickNumber} />
+        <Button id="add" text="+" clickHandler={clickOperator} />
+        <Button id="zero" text="0" clickHandler={clickNumber} />
+        <Button id="decimal" text="." clickHandler={clickNumber} />
+        <Button id="equals" text="=" clickHandler={clickEquals} />
       </div>
     </div>
   );

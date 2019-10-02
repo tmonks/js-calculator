@@ -4,6 +4,9 @@
   "private": true,
   "homepage": "https://tmonks.github.io/js-calculator",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.5",
     "eslint": "^6.4.0",
     "gh-pages": "^2.1.1",
     "node-sass": "^4.12.0",
