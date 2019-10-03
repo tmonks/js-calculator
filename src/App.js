@@ -11,42 +11,36 @@ function App() {
   const [expression, setExpression] = useState([]);
   const [currentTerm, setCurrentTerm] = useState("0");
   const [numberMode, setNumberMode] = useState(true);
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState("");
+  const [justSolved, setJustSolved] = useState(true);
 
   const clickClear = () => {
     setExpression([]);
     setCurrentTerm("0");
-    setHistory([]);
+    setHistory("");
     setNumberMode(true);
   };
 
   const clickEquals = () => {
-    const solution = solve([...expression, currentTerm]).toString();
-    setHistory([expression.join(" ") + " " + currentTerm + " = " + solution]);
+    const solution = solveRounded([...expression, currentTerm]).toString();
+    setHistory(expression.join(" ") + " " + currentTerm + " = " + solution);
     setCurrentTerm(solution);
     setExpression([]);
+    setJustSolved(true);
   };
 
   const clickNumber = input => {
     if (numberMode) {
       // NUMBER MODE
-      if (/\./.test(input)) {
-        if (!/\./.test(currentTerm)) {
-          // decimal input AND currentTerm doesn't already contain a decimal
-          setCurrentTerm(currentTerm + input);
-        }
-      } else {
-        // number input - append it
-        if (currentTerm === "0") {
-          // replace 0 with the current input
-          setCurrentTerm(input);
-        } else {
-          setCurrentTerm(currentTerm + input);
-        }
+      if (justSolved || currentTerm === "0") {
+        setCurrentTerm(input === "." ? "0." : input);
+        setJustSolved(false);
+      } else if (!(/\./.test(input) && /\./.test(currentTerm))) {
+        // decimal input AND currentTerm doesn't already contain a decimal
+        setCurrentTerm(currentTerm + input);
       }
     } else {
-      // OPERATOR MODE
-      // number input, switching from operator to number mode
+      // OPERATOR MODE - number input, switching from operator to number mode
       const operators = currentTerm.split("");
       if (currentTerm.length > 1) {
         if (operators[operators.length - 1] === "-") {
@@ -57,18 +51,14 @@ function App() {
       // commit the last (non '-') operator to the expression
       setExpression([...expression, operators[operators.length - 1]]);
       setNumberMode(true);
-      setCurrentTerm(input);
-
-      if (input === ".") {
-        // if a decimal input as the first character, preface it with a '0'
-        setCurrentTerm("0.");
-      } else {
-        setCurrentTerm(input);
-      }
+      setCurrentTerm(input === "." ? "0." : input);
     }
   };
 
   const clickOperator = input => {
+    if (justSolved) {
+      setJustSolved(false);
+    }
     if (numberMode) {
       // switching from number to operator mode
       // remove any trailing decimal
@@ -83,6 +73,12 @@ function App() {
       // OPERATOR MODE - append input to currentTerm
       setCurrentTerm(currentTerm + input);
     }
+  };
+
+  const solveRounded = statement => {
+    const places = 10;
+    const factor = Math.pow(10, places);
+    return Math.round(solve(statement) * factor) / factor;
   };
 
   const solve = statementToSolve => {
@@ -136,23 +132,11 @@ function App() {
           answer={
             expression.length > 1
               ? numberMode
-                ? solve([...expression, currentTerm])
-                : solve(expression)
+                ? solveRounded([...expression, currentTerm])
+                : solveRounded(expression)
               : ""
           }
         />
-        {/* <div id="display-container">
-          <div id="history">{history[0]}</div>
-          <div id="display">{expression.join(" ") + " " + currentTerm}</div>
-          <div id="live-calc">
-            {expression.length > 1
-              ? numberMode
-                ? solve([...expression, currentTerm])
-                : solve(expression)
-              : ""}
-          </div>
-        </div>
-            */}
         <Button id="clear" text="AC" clickHandler={clickClear} />
         <Button id="divide" text="÷" clickHandler={clickOperator} />
         <Button
