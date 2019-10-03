@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./App.scss";
 import Button from "./Button";
+import Display from "./Display";
 import ReactFCCTest from "react-fcctest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackspace } from "@fortawesome/free-solid-svg-icons";
@@ -129,7 +130,18 @@ function App() {
     <div className="app-container">
       <ReactFCCTest />
       <div className="calculator">
-        <div id="display-container">
+        <Display
+          history={history}
+          expression={expression.join(" ") + " " + currentTerm}
+          answer={
+            expression.length > 1
+              ? numberMode
+                ? solve([...expression, currentTerm])
+                : solve(expression)
+              : ""
+          }
+        />
+        {/* <div id="display-container">
           <div id="history">{history[0]}</div>
           <div id="display">{expression.join(" ") + " " + currentTerm}</div>
           <div id="live-calc">
@@ -140,6 +152,7 @@ function App() {
               : ""}
           </div>
         </div>
+            */}
         <Button id="clear" text="AC" clickHandler={clickClear} />
         <Button id="divide" text="÷" clickHandler={clickOperator} />
         <Button
