@@ -1,4 +1,4 @@
-# Drum/Sound Machine
+# JavaScript Calculator
 
 Calculator app written using ReactJS
 

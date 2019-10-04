@@ -5,7 +5,6 @@ import Display from "./Display";
 import ReactFCCTest from "react-fcctest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackspace } from "@fortawesome/free-solid-svg-icons";
-// import { statement } from "@babel/template";
 
 function App() {
   const [expression, setExpression] = useState([]);
@@ -31,32 +30,32 @@ function App() {
 
   const clickNumber = input => {
     if (numberMode) {
-      // NUMBER MODE
       if (justSolved || currentTerm === "0") {
+        // if we just solved an expression, we want numbers to overwrite the solution
         setCurrentTerm(input === "." ? "0." : input);
         setJustSolved(false);
       } else if (!(/\./.test(input) && /\./.test(currentTerm))) {
-        // decimal input AND currentTerm doesn't already contain a decimal
+        // as long as we aren't inputting a 2nd decimal, append the input to the currentTerm
         setCurrentTerm(currentTerm + input);
       }
     } else {
-      // OPERATOR MODE - number input, switching from operator to number mode
+      // OPERATOR MODE - number input, so switch from operator to number mode
       const operators = currentTerm.split("");
-      if (currentTerm.length > 1) {
-        if (operators[operators.length - 1] === "-") {
-          // if the last operator is '-', move it to the input as a negative sign
-          input = operators.pop() + input;
-        }
+      if (currentTerm.length > 1 && operators[operators.length - 1] === "-") {
+        // if multiple operators were input and the last operator is '-', move it to the input as a negative sign
+        input = operators.pop() + input;
       }
       // commit the last (non '-') operator to the expression
       setExpression([...expression, operators[operators.length - 1]]);
       setNumberMode(true);
+      // put input as the currentTerm, prefixing with a '0' if a decimal was input
       setCurrentTerm(input === "." ? "0." : input);
     }
   };
 
   const clickOperator = input => {
     if (justSolved) {
+      // if an operator is input right after solving, we'll continue working on it and keep the solution as the first term in the expression
       setJustSolved(false);
     }
     if (numberMode) {
@@ -81,9 +80,10 @@ function App() {
     return Math.round(solve(statement) * factor) / factor;
   };
 
-  const solve = statementToSolve => {
+  // takes an array of at least 3 terms, consisting of operators between numbers
+  const solve = statement => {
     // base case
-    const stmt = [...statementToSolve];
+    const stmt = [...statement];
     if (stmt.length === 1) {
       return parseFloat(stmt[0]);
     }

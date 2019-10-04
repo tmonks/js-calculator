@@ -16,10 +16,7 @@ body {
   width: 100vw;
   grid-gap: 1px;
   max-height: 500px;
-  // max-height: 600px;
   height: calc(100vh - 10px);
-  // max-height: 1000px;
-  // height: 100vh;
   background-color: $colorCalcBg;
   padding: 8px;
   box-sizing: border-box;
@@ -66,8 +63,7 @@ body {
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome and Opera */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 /* center-align Font Awesome svg */
