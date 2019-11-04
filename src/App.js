@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.scss";
 import Button from "./Button";
 import Display from "./Display";
-import ReactFCCTest from "react-fcctest";
+// import ReactFCCTest from "react-fcctest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 
@@ -124,7 +124,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <ReactFCCTest />
+      {/* <ReactFCCTest /> */}
       <div className="calculator">
         <Display
           history={history}
